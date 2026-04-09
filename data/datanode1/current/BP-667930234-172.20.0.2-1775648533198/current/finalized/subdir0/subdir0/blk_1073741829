@@ -1,0 +1,6 @@
+hadoop est un framework distribue
+hadoop permet de stocker des donnees sur plusieurs noeuds
+hdfs est le systeme de fichiers de hadoop
+mapreduce est le moteur de calcul de hadoop
+les datanodes stockent les blocs de donnees
+le namenode gere la carte des fichiers

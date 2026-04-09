@@ -1,0 +1,65 @@
+services:
+  namenode:
+    image: apache/hadoop:3.3.6
+    hostname: namenode
+    container_name: namenode
+    environment:
+      - ENSURE_NAMENODE_DIR=/tmp/hadoop-root/dfs/name
+    ports:
+      - "9870:9870"
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+      - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+    command: ["hdfs", "namenode"]
+  datanode1:
+    image: apache/hadoop:3.3.6
+    hostname: datanode1
+    container_name: datanode1
+    depends_on:
+      - namenode
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+      - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./data/datanode1:/opt/hadoop/data/datanode
+    command:
+      ["hdfs", "datanode"]
+
+  datanode2:
+    image: apache/hadoop:3.3.6
+    hostname: datanode2
+    container_name: datanode2
+    depends_on:
+      - namenode
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+      - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./data/datanode2:/opt/hadoop/data/datanode
+    command:
+      ["hdfs", "datanode"]
+
+  datanode3:
+    image: apache/hadoop:3.3.6
+    hostname: datanode3
+    container_name: datanode3
+    depends_on:
+      - namenode
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+      - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./data/datanode3:/opt/hadoop/data/datanode
+    command:
+      ["hdfs", "datanode"]
+
+  datanode4:
+    image: apache/hadoop:3.3.6
+    hostname: datanode4
+    container_name: datanode4
+    depends_on:
+      - namenode
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+      - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./data/datanode4:/opt/hadoop/data/datanode
+    command:
+      ["hdfs", "datanode"]
+
