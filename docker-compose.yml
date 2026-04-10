@@ -10,19 +10,54 @@ services:
     volumes:
       - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
       - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./conf/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
+      - ./conf/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
     command: ["hdfs", "namenode"]
+
+  resourcemanager:
+    image: apache/hadoop:3.3.6
+    hostname: resourcemanager
+    container_name: resourcemanager
+    depends_on:
+      - namenode
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+      - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./conf/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
+      - ./conf/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
+    command: ["yarn", "resourcemanager"]
+
   datanode1:
     image: apache/hadoop:3.3.6
     hostname: datanode1
     container_name: datanode1
     depends_on:
       - namenode
+      - resourcemanager
     volumes:
       - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
       - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./conf/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
+      - ./conf/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
       - ./data/datanode1:/opt/hadoop/data/datanode
     command:
       ["hdfs", "datanode"]
+
+  nodemanager1:
+    image: apache/hadoop:3.3.6
+    hostname: nodemanager1
+    container_name: nodemanager1
+    depends_on:
+      - resourcemanager
+    volumes:
+      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+      - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./conf/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
+      - ./conf/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
+    command:
+      ["yarn", "nodemanager"]
 
   datanode2:
     image: apache/hadoop:3.3.6
@@ -30,36 +65,26 @@ services:
     container_name: datanode2
     depends_on:
       - namenode
+      - resourcemanager
     volumes:
       - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
       - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - ./conf/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
+      - ./conf/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
       - ./data/datanode2:/opt/hadoop/data/datanode
     command:
       ["hdfs", "datanode"]
 
-  datanode3:
+  nodemanager2:
     image: apache/hadoop:3.3.6
-    hostname: datanode3
-    container_name: datanode3
+    hostname: nodemanager2
+    container_name: nodemanager2
     depends_on:
-      - namenode
+      - resourcemanager
     volumes:
       - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
       - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
-      - ./data/datanode3:/opt/hadoop/data/datanode
+      - ./conf/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
+      - ./conf/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
     command:
-      ["hdfs", "datanode"]
-
-  datanode4:
-    image: apache/hadoop:3.3.6
-    hostname: datanode4
-    container_name: datanode4
-    depends_on:
-      - namenode
-    volumes:
-      - ./conf/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
-      - ./conf/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
-      - ./data/datanode4:/opt/hadoop/data/datanode
-    command:
-      ["hdfs", "datanode"]
-
+      ["yarn", "nodemanager"]
